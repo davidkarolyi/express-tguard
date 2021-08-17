@@ -1,2 +1,2 @@
 # express-tguard
-Schema validation middleware for express, based on tguard
+Minimalistic schema validation express middleware for TypeScript
