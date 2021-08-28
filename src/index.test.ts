@@ -1,7 +1,7 @@
 import { validateSchema } from "./index";
 import request from "supertest";
 import express, { json, RequestHandler } from "express";
-import { TNumber, TNumberAsString, TString } from "tguard";
+import { TArray, TNumber, TNumberAsString, TString } from "tguard";
 import { StatusCodes } from "http-status-codes";
 
 describe("validateSchema", () => {
@@ -82,6 +82,36 @@ describe("validateSchema", () => {
           await request(app).post("/").send(validBody).expect(StatusCodes.OK);
 
           expect(handler).toHaveBeenCalled();
+        });
+
+        it("infers types correctly", async () => {
+          const requestSchema = {
+            body: { name: TString, posts: TArray(TString) },
+            params: {
+              id: TString,
+            },
+            query: {
+              ids: TArray(TString),
+            },
+          };
+          const app = express();
+          app.post(
+            "/:id",
+            json(),
+            validateSchema(requestSchema, (req, res) => {
+              // These statements will throw a TS error, if they're not typed correctly
+              req.body.posts.filter((post) => post.endsWith(""));
+              req.query.ids.filter((id) => id.endsWith(""));
+              req.params.id.split("").filter((char) => char.endsWith(""));
+              res.sendStatus(StatusCodes.OK);
+            })
+          );
+
+          await request(app)
+            .post("/id123")
+            .query({ ids: ["", ""] })
+            .send({ name: "John", posts: [] })
+            .expect(StatusCodes.OK);
         });
       });
 
