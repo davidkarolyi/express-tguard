@@ -1,18 +1,18 @@
-import { RequestHandler, json, request } from "express";
+import { RequestHandler } from "express";
 import { StatusCodes } from "http-status-codes";
-import { Guard, Schema, TAny } from "tguard";
+import { Guard, Schema, SchemaType } from "tguard";
 
-export interface RequestSchema {
+export type RequestSchema<BodySchema extends Schema = any> = {
   params?: Schema;
-  body?: Schema;
+  body?: BodySchema;
   query?: Schema;
-}
+};
 
-export function validateSchema(
-  requestSchema: RequestSchema,
-  handler?: RequestHandler
+export function validateSchema<BodySchema extends Schema = any>(
+  requestSchema: RequestSchema<BodySchema>,
+  handler?: RequestHandler<any, any, SchemaType<BodySchema>>
 ): RequestHandler {
-  const TRequest = new Guard(normalizeSchema(requestSchema));
+  const TRequest = new Guard(requestSchema);
 
   return (req, res, next) => {
     try {
@@ -23,11 +23,4 @@ export function validateSchema(
       res.status(StatusCodes.BAD_REQUEST).json({ error: error.message });
     }
   };
-}
-
-function normalizeSchema(requestSchema: RequestSchema) {
-  return Object.entries(requestSchema).reduce<Schema>(
-    (schema, [key, value]) => ({ ...schema, [key]: value }),
-    {}
-  );
 }

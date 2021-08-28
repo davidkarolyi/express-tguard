@@ -98,31 +98,4 @@ describe("validateSchema", () => {
       });
     });
   });
-
-  //     describe("when the request is matching the schema", () => {
-  //       const validBody = {
-  //         name: "John",
-  //         age: 20,
-  //       };
-  //       describe("when a request handler was provided", () => {
-  //         it("calls the provided request handler", async () => {
-  //           const app = express();
-  //           const handler = jest.fn().mockImplementation(mockHandler);
-  //           app.post("/", json(), schemaGuard.require(definition, handler));
-  //           await request(app).post("/").send(validBody);
-  //           expect(handler).toHaveBeenCalled();
-  //         });
-  //       });
-  //       describe("when a handler wasn't provided", () => {
-  //         it("calls next() function", async () => {
-  //           const app = express();
-  //           const handler = jest.fn().mockImplementation(mockHandler);
-  //           app.post("/", json(), schemaGuard.require(definition), handler);
-  //           await request(app).post("/").send(validBody);
-  //           expect(handler).toHaveBeenCalled();
-  //         });
-  //       });
-  //     });
-  //   });
-  // });
 });
