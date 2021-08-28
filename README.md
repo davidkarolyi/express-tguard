@@ -4,6 +4,8 @@
 > with **properly typed request object**.
 > Based on the widely popular [tguard](https://github.com/davidkarolyi/tguard) library.
 
+![CI](https://github.com/davidkarolyi/express-tguard/workflows/CI/badge.svg)
+
 ## Installation
 
 ```sh

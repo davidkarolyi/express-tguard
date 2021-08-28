@@ -2880,10 +2880,10 @@ test-exclude@^6.0.0:
     glob "^7.1.4"
     minimatch "^3.0.4"
 
-tguard@^3.0.4-0:
-  version "3.0.4-0"
-  resolved "https://registry.yarnpkg.com/tguard/-/tguard-3.0.4-0.tgz#b045c90aaf549e6e7bd1dab34d6ea0089ac314a9"
-  integrity sha512-mflkq3UYASYQLUL+J1UmdSAu/vtV5zAaCgn6xZdFOlH/4HmHF+ba5kzEsx7MxBBZuJLXdTuwiSPmFrueAeQHDg==
+tguard@^3.0.4-1:
+  version "3.0.4-1"
+  resolved "https://registry.yarnpkg.com/tguard/-/tguard-3.0.4-1.tgz#fd914e6c7b00aff6359ce468f6ce2b6a8931ea3b"
+  integrity sha512-5Ab36R77aV3yiXlAIrng+nvH5j6mFa+pA13GSdZ3+KwbVBxFAwtWwudANN7vjzF4+mXc+ts1uywryTsWsIvJZg==
   dependencies:
     lodash "^4.17.21"
 
