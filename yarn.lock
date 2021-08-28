@@ -1523,6 +1523,11 @@ http-proxy-agent@^4.0.1:
     agent-base "6"
     debug "4"
 
+http-status-codes@^2.1.4:
+  version "2.1.4"
+  resolved "https://registry.yarnpkg.com/http-status-codes/-/http-status-codes-2.1.4.tgz#453d99b4bd9424254c4f6a9a3a03715923052798"
+  integrity sha512-MZVIsLKGVOVE1KEnldppe6Ij+vmemMuApDfjhVSLzyYP+td0bREEYyAoIw9yFePoBXManCuBqmiNP5FqJS5Xkg==
+
 https-proxy-agent@^5.0.0:
   version "5.0.0"
   resolved "https://registry.yarnpkg.com/https-proxy-agent/-/https-proxy-agent-5.0.0.tgz#e2a90542abb68a762e0a0850f6c9edadfd8506b2"
@@ -2161,7 +2166,7 @@ locate-path@^5.0.0:
   dependencies:
     p-locate "^4.1.0"
 
-lodash@4.x, lodash@^4.7.0:
+lodash@4.x, lodash@^4.17.21, lodash@^4.7.0:
   version "4.17.21"
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.21.tgz#679591c564c3bffaae8454cf0b3df370c3d6911c"
   integrity sha512-v2kDEe57lecTulaDIuNTPy3Ry4gLGJ6Z1O3vE1krgXZNrsQ+LFTGHVxVjcXPs17LhbZVGedAJv8XZ1tvj5FvSg==
@@ -2807,10 +2812,12 @@ test-exclude@^6.0.0:
     glob "^7.1.4"
     minimatch "^3.0.4"
 
-tguard@^2.1.0:
-  version "2.1.0"
-  resolved "https://registry.yarnpkg.com/tguard/-/tguard-2.1.0.tgz#4746f4fa6637a5ec1ec1c720689d411cecb49fbd"
-  integrity sha512-FaR2jKB6sMpLFJj4CV9Iqxh6zXVNEotU9LQrmAoKizPDVjETGIKox/k+HHhhC3ZWp5/OLE16cdoPime+6v8jsg==
+tguard@^3.0.3-0:
+  version "3.0.3-0"
+  resolved "https://registry.yarnpkg.com/tguard/-/tguard-3.0.3-0.tgz#244fb04c262b03d14e6a5b76e660d7ee5b5e2bf0"
+  integrity sha512-n1g29wn/EgVY50/O0/gqi5owkpzAefwRNFsHkDJx7auI+H2Pm6ssgGVLxK7jfyKXBGqRfY0/el1smkBoPATMQw==
+  dependencies:
+    lodash "^4.17.21"
 
 throat@^6.0.1:
   version "6.0.1"

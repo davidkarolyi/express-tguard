@@ -1,60 +1,128 @@
-import { SchemaGuard } from "./index";
+import { validateSchema } from "./index";
 import request from "supertest";
-import express, { RequestHandler } from "express";
-import { GuardDefinitionObject, TNumber, TString } from "tguard";
+import express, { json, RequestHandler } from "express";
+import { TNumber, TNumberAsString, TString } from "tguard";
+import { StatusCodes } from "http-status-codes";
 
-describe("SchemaGuard", () => {
-  it("can be instantiated", () => {
-    const schemaGuard = new SchemaGuard();
-    expect(schemaGuard).toBeInstanceOf(SchemaGuard);
+describe("validateSchema", () => {
+  it("returns a request handler", () => {
+    expect(typeof validateSchema({})).toBe("function");
   });
 
-  describe("require", () => {
-    const schemaGuard = new SchemaGuard();
-
-    it("accepts a guard definiton object as a first parameter", () => {
-      const definition: GuardDefinitionObject = {};
-      expect(() => schemaGuard.require(definition)).not.toThrow();
-    });
-
-    it("accepts an optional request handler", () => {
-      const definition: GuardDefinitionObject = {};
-      const handler: RequestHandler = () => {};
-      expect(() => schemaGuard.require(definition, handler)).not.toThrow();
-    });
-
-    it("returns a request handler", () => {
-      const definition: GuardDefinitionObject = {};
-      expect(typeof schemaGuard.require(definition)).toBe("function");
-    });
-
-    describe("the returned request handler", () => {
-      const definition: GuardDefinitionObject = {
-        body: {
-          name: TString,
-          age: TNumber,
-        },
-      };
-
-      describe("when the request does not matching the schema", () => {
-        it("reponds with 400 Bad request", async () => {
+  describe("the returned request handler", () => {
+    describe("when the request does not match the schema", () => {
+      describe("when body is invalid", () => {
+        it("reponds with a descriptive error message and status 400", async () => {
           const app = express();
-          app.get("/", schemaGuard.require(definition));
-          await request(app).get("/").expect(400);
+          app.post(
+            "/",
+            json(),
+            validateSchema({ body: { id: TNumber, name: TString } })
+          );
+          const response = await request(app)
+            .post("/")
+            .send({ id: 10 })
+            .expect(StatusCodes.BAD_REQUEST);
+
+          expect(response.body).toEqual({
+            error:
+              'Validation failed: Missing value at "body.name", expected type: string',
+          });
         });
       });
 
-      describe("when the request is matching the schema", () => {
-        it("calls the provided request handler", async () => {
-          const handler = jest
-            .fn()
-            .mockImplementation((req, res) => res.sendStatus(200));
+      describe("when params are invalid", () => {
+        it("responds with a descriptive error message and status 400", async () => {
           const app = express();
-          app.get("/", schemaGuard.require(definition, handler));
-          await request(app).get("/").expect(200);
+          app.post("/:id", validateSchema({ params: { id: TNumberAsString } }));
+          const response = await request(app)
+            .post("/foo")
+            .expect(StatusCodes.BAD_REQUEST);
+
+          expect(response.body).toEqual({
+            error:
+              'Validation failed: Invalid value at "params.id", expected type: number(as a string)',
+          });
+        });
+      });
+
+      describe("when query is invalid", () => {
+        it("responds with a descriptive error message and status 400", async () => {
+          const app = express();
+          app.post("/", validateSchema({ query: { id: TNumberAsString } }));
+          const response = await request(app)
+            .post("/")
+            .query({ id: "foo" })
+            .expect(StatusCodes.BAD_REQUEST);
+
+          expect(response.body).toEqual({
+            error:
+              'Validation failed: Invalid value at "query.id", expected type: number(as a string)',
+          });
+        });
+      });
+    });
+
+    describe("when the request matches the schema", () => {
+      const mockHandler: RequestHandler = (_, res) =>
+        res.sendStatus(StatusCodes.OK);
+
+      const requestSchema = { body: { name: TString, age: TNumber } };
+      const validBody = {
+        name: "John",
+        age: 20,
+      };
+
+      describe("when a request handler was provided", () => {
+        it("calls the provided request handler", async () => {
+          const app = express();
+          const handler = jest.fn().mockImplementation(mockHandler);
+          app.post("/", json(), validateSchema(requestSchema, handler));
+
+          await request(app).post("/").send(validBody).expect(StatusCodes.OK);
+
+          expect(handler).toHaveBeenCalled();
+        });
+      });
+
+      describe("when a handler wasn't provided", () => {
+        it("calls next() function", async () => {
+          const app = express();
+          const handler = jest.fn().mockImplementation(mockHandler);
+          app.post("/", json(), validateSchema(requestSchema), handler);
+
+          await request(app).post("/").send(validBody).expect(StatusCodes.OK);
+
           expect(handler).toHaveBeenCalled();
         });
       });
     });
   });
+
+  //     describe("when the request is matching the schema", () => {
+  //       const validBody = {
+  //         name: "John",
+  //         age: 20,
+  //       };
+  //       describe("when a request handler was provided", () => {
+  //         it("calls the provided request handler", async () => {
+  //           const app = express();
+  //           const handler = jest.fn().mockImplementation(mockHandler);
+  //           app.post("/", json(), schemaGuard.require(definition, handler));
+  //           await request(app).post("/").send(validBody);
+  //           expect(handler).toHaveBeenCalled();
+  //         });
+  //       });
+  //       describe("when a handler wasn't provided", () => {
+  //         it("calls next() function", async () => {
+  //           const app = express();
+  //           const handler = jest.fn().mockImplementation(mockHandler);
+  //           app.post("/", json(), schemaGuard.require(definition), handler);
+  //           await request(app).post("/").send(validBody);
+  //           expect(handler).toHaveBeenCalled();
+  //         });
+  //       });
+  //     });
+  //   });
+  // });
 });
