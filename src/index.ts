@@ -1,3 +1,5 @@
+export * from "tguard";
+
 import { RequestHandler, Request } from "express";
 import { StatusCodes } from "http-status-codes";
 import { Guard, Schema, SchemaType } from "tguard";
