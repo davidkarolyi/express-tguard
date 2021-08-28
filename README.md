@@ -5,6 +5,7 @@
 > Based on the widely popular [tguard](https://github.com/davidkarolyi/tguard) library.
 
 ![CI](https://github.com/davidkarolyi/express-tguard/workflows/CI/badge.svg)
+[![codecov](https://codecov.io/gh/davidkarolyi/express-tguard/branch/main/graph/badge.svg?token=MB8YICEAOZ)](https://codecov.io/gh/davidkarolyi/express-tguard)
 
 ## Installation
 
