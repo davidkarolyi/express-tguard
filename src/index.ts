@@ -45,7 +45,7 @@ export function validateSchema<
           next
         );
       else next();
-    } catch (error) {
+    } catch (error: any) {
       res.status(StatusCodes.BAD_REQUEST).json({ error: error.message });
     }
   };
